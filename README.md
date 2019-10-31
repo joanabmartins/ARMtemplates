@@ -1,3 +1,2 @@
 # ARMtemplates
 
-Some templates
