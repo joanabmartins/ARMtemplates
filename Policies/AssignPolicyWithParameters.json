@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "policyDefinitionID": {
+      "type": "string",
+      "defaultValue": "\/providers\/Microsoft.Authorization\/policyDefinitions\/d157c373-a6c4-483d-aaad-570756956268"
+    },
+    "policyAssignmentName": {
+      "type": "string",
+      "defaultValue": "[concat('AddReplaceTagRGsAssignment-',newGuid())]"
+    },
+    "tagName": {
+      "type": "string",
+      "defaultValue": "test"
+    },
+    "tagValue": {
+      "type": "string",
+      "defaultValue": "AssignRgTags"
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "name": "[parameters('policyAssignmentName')]",
+      "apiVersion": "2018-05-01",
+      "location": "[deployment().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "scope": "[concat(subscription().id)]",
+        "policyDefinitionId": "[parameters('policyDefinitionID')]",
+        "parameters": {
+          "tagName": {
+            "value": "[parameters('tagName')]"
+          },
+          "tagValue": {
+            "value": "[parameters('tagValue')]"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"mspOfferName": {
+			"type": "string",
+			"metadata": {
+				"description": "Specify the name of the offer from the Managed Service Provider"
+			}
+		},
+		"mspOfferDescription": {
+			"type": "string",
+			"metadata": {
+				"description": "Name of the Managed Service Provider offering"
+			}
+		},
+		"managedByTenantId": {
+			"type": "string",
+			"metadata": {
+				"description": "Specify the tenant id of the Managed Service Provider"
+			}
+		},
+		"authorizations": {
+			"value": [
+				{
+					"principalId": "<user, group, object id>",
+					"principalIdDisplayName": "<display name>",
+					"roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
+				},
+				{
+					"principalId": "<user, group, object id>",
+					"principalIdDisplayName": "<display name>",
+					"roleDefinitionId": "36243c78-bf99-498c-9df9-86d9f8d28608"
+				},
+				{
+					"principalId": "<user, group, object id>",
+					"principalIdDisplayName": "<display name>",
+					"roleDefinitionId": "18d7d88d-d35e-4fb5-a5c3-7773c20a72d9",
+					"delegatedRoleDefinitionIds": [
+						"b24988ac-6180-42a0-ab88-20f7382dd24c"
+					]
+				}
+			]
+		}
+	},
+		"variables": {
+			"mspRegistrationName": "[guid(parameters('mspOfferName'))]",
+			"mspAssignmentName": "[guid(parameters('mspOfferName'))]"
+		},
+		"resources": [
+			{
+				"type": "Microsoft.ManagedServices/registrationDefinitions",
+				"apiVersion": "2019-06-01",
+				"name": "[variables('mspRegistrationName')]",
+				"properties": {
+					"registrationDefinitionName": "[parameters('mspOfferName')]",
+					"description": "[parameters('mspOfferDescription')]",
+					"managedByTenantId": "[parameters('managedByTenantId')]",
+					"authorizations": "[parameters('authorizations')]"
+				}
+			},
+			{
+				"type": "Microsoft.ManagedServices/registrationAssignments",
+				"apiVersion": "2019-06-01",
+				"name": "[variables('mspAssignmentName')]",
+				"dependsOn": [
+					"[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+				],
+				"properties": {
+					"registrationDefinitionId": "[resourceId('Microsoft.ManagedServices/registrationDefinitions/', variables('mspRegistrationName'))]"
+				}
+			}
+		],
+		"outputs": {
+			"mspOfferName": {
+				"type": "String",
+				"value": "[concat('Managed by', ' ', parameters('mspOfferName'))]"
+			},
+			"authorizations": {
+				"type": "Array",
+				"value": "[parameters('authorizations')]"
+			}
+		}
+	}
