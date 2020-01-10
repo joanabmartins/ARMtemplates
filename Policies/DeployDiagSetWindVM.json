@@ -1,0 +1,117 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Compute/virtualMachines"
+        },
+        {
+          "field": "Microsoft.Compute/imagePublisher",
+          "equals": "MicrosoftWindowsServer"
+        },
+        {
+          "field": "Microsoft.Compute/imageOffer",
+          "equals": "WindowsServer"
+        }
+      ]
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Compute/virtualMachines/extensions/type",
+              "equals": "IaaSDiagnostics"
+            },
+            {
+              "field": "Microsoft.Compute/virtualMachines/extensions/publisher",
+              "equals": "Microsoft.Azure.Diagnostics"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+          "/providers/microsoft.authorization/roleDefinitions/17d1049b-9a84-46fb-8f53-869881c3d3ab"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "location": {
+                  "type": "string"
+                },
+                "serverName": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "accountid": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().Name, '/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+                "wadlogs": "<WadCfg> <DiagnosticMonitorConfiguration overallQuotaInMB=\"5120\" xmlns=\"http://schemas.microsoft.com/ServiceHosting/2010/10/DiagnosticsConfiguration\"> <DiagnosticInfrastructureLogs scheduledTransferLogLevelFilter=\"Error\"/> <WindowsEventLog scheduledTransferPeriod=\"PT1M\" > <DataSource name=\"Application!*[System[(Level = 1 or Level = 2 or Level = 3)]]\" /> <DataSource name=\"Security!*[System[band(Keywords,4503599627370496)]]\" /> <DataSource name=\"System!*[System[(Level = 1 or Level = 2 or Level = 3)]]\" /></WindowsEventLog>",
+                "wadperfcounters1": "<PerformanceCounters scheduledTransferPeriod=\"PT1M\"><PerformanceCounterConfiguration counterSpecifier=\"\\Processor(_Total)\\% Processor Time\" sampleRate=\"PT60S\" unit=\"Percent\"><annotation displayName=\"CPU utilization\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor(_Total)\\% Privileged Time\" sampleRate=\"PT60S\" unit=\"Percent\"><annotation displayName=\"CPU privileged time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor(_Total)\\% User Time\" sampleRate=\"PT60S\" unit=\"Percent\"><annotation displayName=\"CPU user time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor Information(_Total)\\Processor Frequency\" sampleRate=\"PT60S\" unit=\"Count\"><annotation displayName=\"CPU frequency\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\System\\Processes\" sampleRate=\"PT60S\" unit=\"Count\"><annotation displayName=\"Processes\" locale=\"en-us\"/><PerformanceCounterConfiguration counterSpecifier=\"\\System\\System Up Time\"\" sampleRate=\"PT60S\" unit=\"Count\"><annotation displayName=\"System Up Time\"\" locale=\"en-us\"/><PerformanceCounterConfiguration counterSpecifier=\"\\System\\Context Switches/sec\"\" sampleRate=\"PT60S\" unit=\"CountPerSecond\"><annotation displayName=\"Context Switches/sec\"\" locale=\"en-us\"/><PerformanceCounterConfiguration counterSpecifier=\"\\System\\Processor Queue Length\"\" sampleRate=\"PT60S\" unit=\"Count\"><annotation displayName=\"Processor Queue Length\"\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Process(_Total)\\Thread Count\" sampleRate=\"PT60S\" unit=\"Count\"><annotation displayName=\"Threads\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Process(_Total)\\Handle Count\" sampleRate=\"PT60S\" unit=\"Count\"><annotation displayName=\"Handles\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\% Committed Bytes In Use\" sampleRate=\"PT60S\" unit=\"Percent\"><annotation displayName=\"Memory usage\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\Available Bytes\" sampleRate=\"PT60S\" unit=\"Bytes\"><annotation displayName=\"Memory available\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\Committed Bytes\" sampleRate=\"PT60S\" unit=\"Bytes\"><annotation displayName=\"Memory committed\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\Commit Limit\" sampleRate=\"PT60S\" unit=\"Bytes\"><annotation displayName=\"Memory commit limit\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\% Disk Time\" sampleRate=\"PT60S\" unit=\"Percent\"></PerformanceCounterConfiguration>",
+                "wadperfcounters2": "<PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\% Disk Read Time\" sampleRate=\"PT60S\" unit=\"Percent\"><annotation displayName=\"Disk active read time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\% Disk Write Time\" sampleRate=\"PT60S\" unit=\"Percent\"><annotation displayName=\"Disk active write time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Transfers/sec\" sampleRate=\"PT60S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk operations\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Reads/sec\" sampleRate=\"PT60S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk read operations\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Writes/sec\" sampleRate=\"PT60S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk write operations\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Bytes/sec\" sampleRate=\"PT60S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk speed\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Read Bytes/sec\" sampleRate=\"PT60S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk read speed\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk(_Total)\\Disk Write Bytes/sec\" sampleRate=\"PT60S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk write speed\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\LogicalDisk(_Total)\\% Free Space\" sampleRate=\"PT60S\" unit=\"Percent\"><annotation displayName=\"Disk free space (percentage)\" locale=\"en-us\"/></PerformanceCounterConfiguration>",
+                "wadperfcounters3": "<PerformanceCounterConfiguration counterSpecifier=\"\\Network Interface(*)\\Bytes Total/sec\" sampleRate=\"PT60S\" unit=\"BytesPerSecond\"><PerformanceCounterConfiguration counterSpecifier=\"\\Network Interface(*)\\Bytes Sent/sec\" sampleRate=\"PT60S\" unit=\"BytesPerSecond\"><PerformanceCounterConfiguration counterSpecifier=\"\\Network Interface(*)\\Bytes Received/sec\" sampleRate=\"PT60S\" unit=\"BytesPerSecond\"><PerformanceCounterConfiguration counterSpecifier=\"\\Network Interface(*)\\Packets/sec\" sampleRate=\"PT60S\" unit=\"BytesPerSecond\"><PerformanceCounterConfiguration counterSpecifier=\"\\Network Interface(*)\\Packets Sent/sec\" sampleRate=\"PT60S\" unit=\"BytesPerSecond\"><PerformanceCounterConfiguration counterSpecifier=\"\\Network Interface(*)\\Packets Received/sec\" sampleRate=\"PT60S\" unit=\"BytesPerSecond\"><PerformanceCounterConfiguration counterSpecifier=\"\\Network Interface(*)\\Packets Outbound Errors\" sampleRate=\"PT60S\" unit=\"Count\"><PerformanceCounterConfiguration counterSpecifier=\"\\Network Interface(*)\\Packets Received Errors\" sampleRate=\"PT60S\" unit=\"Count\"></PerformanceCounters>",
+                "wadcfgxstart": "[concat(variables('wadlogs'), variables('wadperfcounters1'), variables('wadperfcounters2'), variables('wadperfcounters3'), '<Metrics resourceId=\"')]",
+                "wadmetricsresourceid": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name , '/providers/', 'Microsoft.Compute/virtualMachines/')]",
+                "wadcfgxend": "\"><MetricAggregation scheduledTransferPeriod=\"PT1H\"/><MetricAggregation scheduledTransferPeriod=\"PT1M\"/></Metrics></DiagnosticMonitorConfiguration></WadCfg>",
+                "storageAccountName": "[concat(parameters('serverName'), 'osdiag987')]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.Storage/storageAccounts",
+                  "name": "[variables('storageAccountName')]",
+                  "apiVersion": "2019-04-01",
+                  "location": "[parameters('location')]",
+                  "sku": {
+                    "name": "Standard_LRS"
+                  },
+                  "kind": "Storage",
+                  "properties": {}
+                },
+                {
+                  "name": "[concat(parameters('serverName'), '/Microsoft.Insights.VMDiagnosticsSettings')]",
+                  "type": "Microsoft.Compute/virtualMachines/extensions",
+                  "location": "[parameters('location')]",
+                  "apiVersion": "2019-03-01",
+                  "dependsOn": [
+                    "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+                  ],
+                  "properties": {
+                    "publisher": "Microsoft.Azure.Diagnostics",
+                    "type": "IaaSDiagnostics",
+                    "typeHandlerVersion": "1.5",
+                    "autoUpgradeMinorVersion": true,
+                    "settings": {
+                      "xmlCfg": "[base64(concat(variables('wadcfgxstart'), variables('wadmetricsresourceid'), parameters('serverName'), variables('wadcfgxend')))]",
+                      "storageAccount": "[variables('storageAccountName')]"
+                    },
+                    "protectedSettings": {
+                      "storageAccountName": "[variables('storageAccountName')]",
+                      "storageAccountKey": "[listkeys(variables('accountid'), '2015-05-01-preview').key1]",
+                      "storageAccountEndPoint": "https://core.windows.net"
+                    }
+                  }
+                }
+              ],
+              "outputs": {}
+            },
+            "parameters": {
+              "location": {
+                "value": "[field('location')]"
+              },
+              "serverName": {
+                "value": "[field('name')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
