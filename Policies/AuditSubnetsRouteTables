@@ -11,7 +11,7 @@
               },
               {
                 "field": "Microsoft.Network/virtualNetworks/subnets[*].routeTable",
-                "exists": true
+                "exists": false
               }
             ]
           },
@@ -24,7 +24,7 @@
               {
                 "not": {
                   "field": "Microsoft.Network/virtualNetworks/subnets/routeTable",
-                  "exists": true
+                  "exists": false
                 }
               }
             ]
