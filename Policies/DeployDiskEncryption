@@ -56,7 +56,7 @@
                 "extensionName": "AzureDiskEncryption",
                 "extensionVersion": "2.2",
                 "encryptionOperation": "EnableEncryption",
-                "keyVaultName": "[concat(parameters('vmName'), '-KeyVault987')]",
+                "keyVaultName": "[concat(resourcegroup().Name, '987', '-KeyVault')]",
                 "keyVaultResourceGroup": "resourceGroup().name",
                 "volumeType": "Type of the volume OS or Data to perform encryption operation",
                 "forceUpdateTag": "Pass in an unique value like a GUID everytime the operation needs to be force run",
