@@ -1,0 +1,141 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Compute/virtualMachines"
+        },
+        {
+          "anyOf": [
+            {
+              "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.encryptionSettings.enabled",
+              "notEquals": "true"
+            }
+          ]
+        }
+      ]
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Compute/disks",
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Compute/disks/encryptionSettings.diskEncryptionKey",
+              "exists": "True"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "vmName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "tenantID": {
+                  "type": "string",
+                  "metadata": {
+                    "description": "Your Tenant ID. You can get it on the properties of Azure Active Directory."
+                  }
+                }
+              },
+              "variables": {
+                "extensionName": "AzureDiskEncryption",
+                "extensionVersion": "2.2",
+                "encryptionOperation": "EnableEncryption",
+                "keyVaultName": "[concat(parameters('vmName'), '-KeyVault987')]",
+                "keyVaultResourceGroup": "resourceGroup().name",
+                "volumeType": "Type of the volume OS or Data to perform encryption operation",
+                "forceUpdateTag": "Pass in an unique value like a GUID everytime the operation needs to be force run",
+                "resizeOSDisk": "Should the OS partition be resized to occupy full OS VHD before splitting system volume",
+                "keyVaultResourceID": "[concat(subscription().ID,'/resourceGroups/', resourcegroup().Name, '/Microsoft.KeyVault/vaults/', variables('keyVaultName'))]",
+                "keyEncryptionAlgorithm": "RSA-OAEP",
+                "akvSKU": "Standard",
+                "keyVaultURL": "[concat('https://', variables('keyVaultName'), '.vault.azure.net/')]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.KeyVault/vaults",
+                  "name": "[variables('keyVaultName')]",
+                  "apiVersion": "2018-02-14",
+                  "location": "[parameters('location')]",
+                  "properties": {
+                    "enabledForDeployment": false,
+                    "enabledForDiskEncryption": true,
+                    "enabledForTemplateDeployment": false,
+                    "tenantId": "[parameters('tenantID')]",
+                    "accessPolicies": [],
+                    "sku": {
+                      "name": "[variables('akvSKU')]",
+                      "family": "A"
+                    },
+                    "networkAcls": {
+                      "defaultAction": "Allow",
+                      "bypass": "AzureServices"
+                    }
+                  }
+                },
+                {
+                  "type": "Microsoft.Compute/virtualMachines/extensions",
+                  "name": "[concat(parameters('vmName'),'/', variables('extensionName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [
+                    "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+                  ],
+                  "apiVersion": "2017-03-30",
+                  "properties": {
+                    "publisher": "Microsoft.Azure.Security",
+                    "type": "[variables('extensionName')]",
+                    "typeHandlerVersion": "[variables('extensionVersion')]",
+                    "autoUpgradeMinorVersion": true,
+                    "settings": {
+                      "EncryptionOperation": "[variables('encryptionOperation')]",
+                      "KeyVaultURL": "[variables('keyVaultURL')]",
+                      "KeyVaultResourceId": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+                      "KeyEncryptionAlgorithm": "[variables('keyEncryptionAlgorithm')]",
+                      "VolumeType": "ALL",
+                      "ResizeOSDisk": "false"
+                    }
+                  }
+                }
+              ]
+            },
+            "parameters": {
+              "location": {
+                "value": "[field('location')]"
+              },
+              "vmName": {
+                "value": "[field('name')]"
+              },
+              "tenantID": {
+                "value": "[parameters('tenantID')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "tenantID": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tenant ID",
+        "description": "Your Tenant ID. You can get it on the properties of Azure Active Directory."
+      }
+    }
+  }
+}
