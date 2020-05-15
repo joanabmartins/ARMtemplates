@@ -206,7 +206,7 @@
                                     "resourcegroups": "[variables('locanalyticsRG')]",
                                     "resourcename": "[variables('loganalyticsName')]",
                                     "resourcetype": "Log Analytics Workspace",
-                                    "subscriptions": "[subscription()]",
+                                    "subscriptions": "[subscription().id]",
                                     "timerange": "Last 24 hours"
                                 }
                             }
