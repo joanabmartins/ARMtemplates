@@ -87,7 +87,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "CommonSecurityLog\r\n| where DeviceVendor == \"Forcepoint\" and DeviceAction  == 'blocked' and TimeGenerated <= now()\r\n| project TimeGenerated, SourceUserName, SourceIP, SourcePort, DeviceAddress, DestinationHostName, DestinationIP, DestinationPort, LogSeverity\r\n| order by TimeGenerated desc",
+        "query": "CommonSecurityLog\r\n| where DeviceVendor == \"Forcepoint\" and DeviceAction  == 'blocked' and TimeGenerated <= now()\r\n| parse SourceUserName with * \"pt/\" UserName \r\n| project TimeGenerated, SourceUserName, UserName, SourceIP, SourcePort, DeviceAddress, DestinationHostName, DestinationIP, DestinationPort, LogSeverity\r\n| order by TimeGenerated desc",
         "size": 0,
         "timeContext": {
           "durationMs": 2592000000
