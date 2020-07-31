@@ -1,0 +1,31 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.ManagedServices/registrationDefinitions"
+        },
+        {
+          "not": {
+            "field": "Microsoft.ManagedServices/registrationDefinitions/managedByTenantId",
+            "in": "[parameters('listOfAllowedTenants')]"
+          }
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "parameters": {
+    "listOfAllowedTenants": {
+      "type": "Array",
+      "metadata": {
+        "displayName": "Allowed tenants",
+        "description": "The list of managing/parent tenant IDs"
+      }
+    }
+  }
+}
