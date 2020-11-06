@@ -312,9 +312,10 @@
               "showDefault": false
             },
             "timeContext": {
-              "durationMs": 0
+              "durationMs": 604800000
             },
             "timeContextFromParameter": "TimeRange",
+            "defaultValue": "value::all",
             "queryType": 0,
             "resourceType": "microsoft.operationalinsights/workspaces"
           }
@@ -339,7 +340,7 @@
         "query": "AzureActivity\n| where CategoryValue in ({Category}) or '*' in ({Category})\n| where ActivityStatusValue in ({ActivityStatus}) or '*' in ({ActivityStatus})\n| where ResourceProvider in ({ResourceProvider}) or '*' in ({ResourceProvider})\n| where ResourceGroup in ({ResourceGroup}) or '*' in ({ResourceGroup})\n| where Caller like \"{Domain}\"\n| summarize count() by Level",
         "size": 3,
         "timeContext": {
-          "durationMs": 604800000
+          "durationMs": 0
         },
         "timeContextFromParameter": "TimeRange",
         "queryType": 0,
@@ -407,7 +408,7 @@
     {
       "type": 1,
       "content": {
-        "json": "### Activity Count by User"
+        "json": "### Activity Counts by User"
       },
       "name": "text - 7"
     },
@@ -475,7 +476,7 @@
         "size": 1,
         "color": "lightBlue",
         "timeContext": {
-          "durationMs": 604800000
+          "durationMs": 0
         },
         "timeContextFromParameter": "TimeRange",
         "timeBrushParameterName": "FilterTimeRange",
@@ -500,11 +501,11 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "AzureActivity\n| where CategoryValue in ({Category}) or '*' in ({Category})\n| where Level in ({Level}) or '*' in ({Level})\n| where ActivityStatusValue in ({ActivityStatus}) or '*' in ({ActivityStatus})\n| where ResourceProvider in ({ResourceProvider}) or '*' in ({ResourceProvider})\n| where ResourceGroup in ({ResourceGroup}) or '*' in ({ResourceGroup})\n| extend Packed = pack_all()\n| extend TimeFromNow = now() - EventSubmissionTimestamp\n| extend TimeAgo = strcat(case(TimeFromNow < 2m, strcat(toint(TimeFromNow / 1m), ' seconds'), TimeFromNow < 2h, strcat(toint(TimeFromNow / 1m), ' minutes'), TimeFromNow < 2d, strcat(toint(TimeFromNow / 1h), ' hours'), strcat(toint(TimeFromNow / 1d), ' days')), ' ago')\n| where Caller like \"{Domain}\"\n| order by EventSubmissionTimestamp\n| project [\"Operation Name\"] = OperationName, Caller, Category, [\"Azure Resource\"]=ResourceId, Level, [\"Activity Status\"]=ActivityStatus, [\"Time\"]=strcat('🕒', TimeAgo), [\"Details\"]=Packed",
+        "query": "AzureActivity\n| where CategoryValue in ({Category}) or '*' in ({Category})\n| where Level in ({Level}) or '*' in ({Level})\n| where ActivityStatusValue in ({ActivityStatus}) or '*' in ({ActivityStatus})\n| where ResourceProvider in ({ResourceProvider}) or '*' in ({ResourceProvider})\n| where ResourceGroup in ({ResourceGroup}) or '*' in ({ResourceGroup})\n| extend Packed = pack_all()\n| extend TimeFromNow = now() - EventSubmissionTimestamp\n| extend TimeAgo = strcat(case(TimeFromNow < 2m, strcat(toint(TimeFromNow / 1m), ' seconds'), TimeFromNow < 2h, strcat(toint(TimeFromNow / 1m), ' minutes'), TimeFromNow < 2d, strcat(toint(TimeFromNow / 1h), ' hours'), strcat(toint(TimeFromNow / 1d), ' days')), ' ago')\n| where Caller like \"{Domain}\"\n| order by EventSubmissionTimestamp\n| project [\"Operation Name\"] = OperationName, [\"Operation Value\"] = OperationNameValue, Caller, [\"Category\"] = CategoryValue, [\"Resource Group\"] = ResourceGroup, ResourceId, [\"Resource Provider\"]=ResourceProviderValue, Level, [\"Activity Status\"]=ActivityStatusValue, [\"Time\"]=strcat('🕒', TimeAgo), [\"Details\"]=Packed",
         "size": 2,
         "showAnalytics": true,
         "timeContext": {
-          "durationMs": 604800000
+          "durationMs": 0
         },
         "timeContextFromParameter": "TimeRange",
         "exportFieldName": "Pack",
@@ -589,5 +590,6 @@
   "fallbackResourceIds": [
     "Azure Monitor"
   ],
+  "fromTemplateId": "solutions-https://azmonsolutions.blob.core.windows.net/workbooktemplates/Azure%20Activity%20Log/Azure%20Activity%20Log.workbook",
   "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
 }
