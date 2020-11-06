@@ -13,6 +13,9 @@ If you are not doing that already you can check how to do it [here](https://docs
 ### How to deploy the workbook
 1. Go to Azure Monitor -> Workbooks -> New
 2. Open the _Advanced Editor_ using the _</>_ button on the toolbar.
+ <p align="center">
+  <img src="./media/AdvancedEditor.PNG" width="500" alt="">
+</p>
 3. Ensure you are on the _Gallery Template_ tab.
 4. Paste the content of the workbook "Activity Logs by Domain" there and _Apply_ changes.
 5. Save the workbook.
