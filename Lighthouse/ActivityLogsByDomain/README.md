@@ -2,7 +2,8 @@
 **Author: Joana Martins | Customer Engineer, [FastTrack for Azure](https://aka.ms/fasttrackforazure)**
 
 This workbook displays the Azure Activity Logs across subscriptions with an option to filter them by the user domain that created them.
-
+<img src="./media/workbook1.PNG" width="500" alt="">
+<img src="./media/workbook2.PNG" width="500" alt="">
 ### Requirements
 
 It is required that you send the Activity logs to a Log Analytics workspace.
