@@ -30,4 +30,5 @@ For the workbook to work properly you need start by selecting the subscription a
 You can filter the results by the domain of the users. You need to write next to the _Domain_ parameter the domain name.
 
 The workbook also has multiple other filters that you can apply like _Category, Level_, or the _Resource Group_ where the activities that you want to monitor happenned.
+
 <img src="./media/filters.PNG" width="500" alt="">
