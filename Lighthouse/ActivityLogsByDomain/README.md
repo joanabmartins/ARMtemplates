@@ -13,7 +13,7 @@ If you are not doing that already you can check how to do it [here](https://docs
 ### How to deploy the workbook
 1. Go to Azure Monitor -> Workbooks -> New
 2. Open the _Advanced Editor_ using the _</>_ button on the toolbar.
-  <img src="./Media/AdvancedEditor.PNG" width="500" alt="">
+  <img src="./media/AdvancedEditor.PNG" width="500" alt="">
   
 3. Ensure you are on the _Gallery Template_ tab.
 4. Paste the content of the workbook "Activity Logs by Domain" there and _Apply_ changes.
@@ -27,7 +27,7 @@ To view the information, you will need **read permissions** of all subscriptions
 
 For the workbook to work properly you need start by selecting the subscription and log analytics workspace where you are sending the activity logs to.
 
-You can filter the results by the domain of the users. You need to write next to the _Domain_ parameter the domain name, for example 'partnerDomain.com'.
+You can filter the results by the domain of the users. You need to write next to the _Domain_ parameter the domain name.
 
 The workbook also has multiple other filters that you can apply like _Category, Level_, or the _Resource Group_ where the activities that you want to monitor happenned.
-
+<img src="./media/filters.PNG" width="500" alt="">
