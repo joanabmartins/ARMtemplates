@@ -24,6 +24,8 @@ To view the information, you will need **read permissions** of all subscriptions
 ### How to manage the workbook
 
 For the workbook to work properly you need start by selecting the subscription and log analytics workspace where you are sending the activity logs to.
+
 You can filter the results by the domain of the users. You need to write next to the _Domain_ parameter the domain name, for example 'partnerDomain.com'.
+
 The workbook also has multiple other filters that you can apply like _Category, Level_, or the _Resource Group_ where the activities that you want to monitor happenned.
 
