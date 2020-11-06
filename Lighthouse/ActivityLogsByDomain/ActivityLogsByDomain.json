@@ -12,6 +12,9 @@
       "type": 9,
       "content": {
         "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{Subscriptions}"
+        ],
         "parameters": [
           {
             "id": "f12c5d79-48c1-4adb-bad4-d4cc248f7fb9",
@@ -26,7 +29,7 @@
               "value::selected"
             ],
             "value": [
-              "/subscriptions/5044ad67-cc18-4153-be7e-cefd01e28625"
+              "value::all"
             ],
             "typeSettings": {
               "additionalResourceOptions": [
@@ -50,10 +53,13 @@
               "{Subscriptions}"
             ],
             "value": [
-              "/subscriptions/5044ad67-cc18-4153-be7e-cefd01e28625/resourceGroups/monitoringrg/providers/Microsoft.OperationalInsights/workspaces/ascloganalytics"
+              "value::all"
             ],
             "typeSettings": {
-              "additionalResourceOptions": []
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
             },
             "queryType": 1,
             "resourceType": "microsoft.resourcegraph/resources"
@@ -118,8 +124,8 @@
           }
         ],
         "style": "pills",
-        "queryType": 0,
-        "resourceType": "microsoft.operationalinsights/workspaces"
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
       },
       "name": "parameters - 3"
     },
@@ -401,7 +407,7 @@
     {
       "type": 1,
       "content": {
-        "json": "### Activity Counts by User"
+        "json": "### Activity Count by User"
       },
       "name": "text - 7"
     },
@@ -412,7 +418,7 @@
         "query": "AzureActivity\r\n| where CategoryValue in ({Category}) or '*' in ({Category})\r\n| where Level in ({Level}) or '*' in ({Level})\r\n| where ActivityStatusValue in ({ActivityStatus}) or '*' in ({ActivityStatus})\r\n| where ResourceProvider in ({ResourceProvider}) or '*' in ({ResourceProvider})\r\n| where ResourceGroup in ({ResourceGroup}) or '*' in ({ResourceGroup})\r\n| where Caller like \"{Domain}\"\r\n| summarize count(Caller) by Caller",
         "size": 3,
         "timeContext": {
-          "durationMs": 604800000
+          "durationMs": 0
         },
         "timeContextFromParameter": "TimeRange",
         "queryType": 0,
@@ -448,7 +454,8 @@
           },
           "showBorder": true,
           "sortCriteriaField": "count_Caller",
-          "sortOrderField": 2
+          "sortOrderField": 2,
+          "rowLimit": 20
         }
       },
       "name": "query - 6"
@@ -582,6 +589,5 @@
   "fallbackResourceIds": [
     "Azure Monitor"
   ],
-  "fromTemplateId": "solutions-https://azmonsolutions.blob.core.windows.net/workbooktemplates/Azure%20Activity%20Log/Azure%20Activity%20Log.workbook",
   "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
 }
