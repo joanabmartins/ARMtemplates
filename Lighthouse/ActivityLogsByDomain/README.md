@@ -7,13 +7,13 @@ This workbook displays the Azure Activity Logs across subscriptions with an opti
 
 <img src="./media/workbook2.PNG" width="500" alt="">
 
-### Requirements
+## Requirements
 You need to send the Activity logs to a Log Analytics workspace.
 
 If you are not doing that already you can check how to do it [here](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log#send-to-log-analytics-workspace).
 
 
-### How to deploy the workbook
+## How to deploy the workbook
 1. Go to Azure Monitor -> Workbooks -> New
 2. Open the _Advanced Editor_ using the _</>_ button on the toolbar.
   <img src="./media/AdvancedEditor.PNG" width="500" alt="">
@@ -26,7 +26,7 @@ To deploy the workbook you will need **write permissions** in the subscription w
 
 To view the information, you will need **read permissions** of all subscriptions that are in the defined groups. 
 
-### How to manage the workbook
+## How to manage the workbook
 
 For the workbook to work properly you need to select the subscription and log analytics workspace where you are sending the activity logs to.
 
