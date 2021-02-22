@@ -1,0 +1,44 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/virtualNetworks/subnets"
+        },
+        {
+          "not": {
+            "field": "Microsoft.Network/virtualNetworks/subnets/routeTable.id",
+            "equals": "[concat(subscription().id, '/resourceGroups/', parameters('RouteTableRG'), '/providers/Microsoft.Network/routeTables/', parameters('RouteTableName'))]"
+          }
+        }
+      ]
+    },
+    "then": {
+      "effect": "append",
+      "details": [
+        {
+          "field": "Microsoft.Network/virtualNetworks/subnets/routeTable.id",
+          "value": "[concat(subscription().id, '/resourceGroups/', parameters('RouteTableRG'), '/providers/Microsoft.Network/routeTables/', parameters('RouteTableName'))]"
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "RouteTableRG": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Route Table Resource Group Name",
+        "description": "Name of the resource group where the route table is"
+      }
+    },
+    "RouteTableName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Route Table Name",
+        "description": "Name of the route table"
+      }
+    }
+  }
+}
